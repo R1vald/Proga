@@ -10,15 +10,15 @@ int main()
 {
 	setlocale(LC_ALL, "rus");
 	int num_1, num_2, num_3, x, y, d;
-	cout << "Ââåäèòå ïåðâîå ÷èñëî: "; cin >> num_1; cout;
-	cout << "Ââåäèòå âòîðîå ÷èñëî: "; cin >> num_2; cout;
-	cout << "Ââåäèòå òðåòüå ÷èñëî: "; cin >> num_3; cout << endl << endl;
-	if (num_1 == 0 || num_2 == 0 || num_3 == 0) { cout << "ÎÄÍÎ ÈÇ ×ÈÑÅË ÐÀÂÍßÅÒÑß 0!" << endl; return main(); }
+	cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ð¿ÐµÑ€Ð²Ð¾Ðµ Ñ‡Ð¸ÑÐ»Ð¾: "; cin >> num_1; cout;
+	cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ð²Ñ‚Ð¾Ñ€Ð¾Ðµ Ñ‡Ð¸ÑÐ»Ð¾: "; cin >> num_2; cout;
+	cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ñ‚Ñ€ÐµÑ‚ÑŒÐµ Ñ‡Ð¸ÑÐ»Ð¾: "; cin >> num_3; cout << endl << endl;
+	if (num_1 == 0 || num_2 == 0 || num_3 == 0) { cout << "ÐžÐ”ÐÐž Ð˜Ð— Ð§Ð˜Ð¡Ð•Ð› Ð ÐÐ’ÐÐ¯Ð•Ð¢Ð¡Ð¯ 0!" << endl; return main(); }
 	else
 	{
-		cout << "ÍÎÄ ïåðâûõ 3-õ ÷èñåë: " << NOD(num_1, num_2, num_3) << endl;
-		cout << "ÍÎÄ ïåðâûõ 2-õ ÷èñåë: " << NOD(num_1, num_2) << endl << endl;
-		cout << "Ðåêóðñèâíûé âàðèàíò íàõîæäåíèÿ ÍÎÄ:" << NOD_REC(num_1, num_2) << endl;
+		cout << "ÐÐžÐ” Ð¿ÐµÑ€Ð²Ñ‹Ñ… 3-Ñ… Ñ‡Ð¸ÑÐµÐ»: " << NOD(num_1, num_2, num_3) << endl;
+		cout << "ÐÐžÐ” Ð¿ÐµÑ€Ð²Ñ‹Ñ… 2-Ñ… Ñ‡Ð¸ÑÐµÐ»: " << NOD(num_1, num_2) << endl << endl;
+		cout << "Ð ÐµÐºÑƒÑ€ÑÐ¸Ð²Ð½Ñ‹Ð¹ Ð²Ð°Ñ€Ð¸Ð°Ð½Ñ‚ Ð½Ð°Ñ…Ð¾Ð¶Ð´ÐµÐ½Ð¸Ñ ÐÐžÐ”:" << NOD_REC(num_1, num_2) << endl;
 	}
 	return 0;
 }
@@ -57,7 +57,7 @@ int NOD(int a, int b)
 {
 	int delimoe, delitel, r = 0, delimoe_fake;
 
-	if (a >= b) { delimoe = a; delitel = b; } // ïðîâåðêà
+	if (a >= b) { delimoe = a; delitel = b; } // Ð¿Ñ€Ð¾Ð²ÐµÑ€ÐºÐ°
 	else { delimoe = b; delitel = a; }
 	int ostatok = delitel;
 	do
