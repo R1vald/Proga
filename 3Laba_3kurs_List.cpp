@@ -151,7 +151,7 @@
 //
 //			List<Type>* left_origin_next = left_origin->Next;
 //			if (right_element - left_element == 1)
-//				left_origin_next = left_origin;		//îáðàáîòêà ñîñåäíèõ ýëåìåíòîâ
+//				left_origin_next = left_origin;		//обработка соседних элементов
 //
 //			List<Type>* right_origin_next = right_origin != Last ? right_origin->Next : NULL;
 //
@@ -223,13 +223,13 @@
 //	do {
 //		system("cls");
 //		st11.show();
-//		cout << "Îïåðàöèè" << endl;
-//		cout << "1. äîáàâèòü ýëåìåíò â ñïèñîê" << endl;
-//		cout << "2. óäàëèòü ýëåìåíò ñïèñêà" << endl;
-//		cout << "3. îáìåíÿòü çíà÷åíèÿìè äâà ýëåìåíòà â ñïèñêå" << endl;
-//		cout << "4. îïðåäåëåíèå òåêóùåãî ÷èñëà ýëåìåíòîâ â ñïèñêå" << endl;
-//		cout << "5. î÷èñòêà ñïèñêà " << endl;
-//		cout << "6. íåðàçðóøàþùåå ÷òåíèå ýëåìåíòà èç ñïèñêà" << endl;
+//		cout << "Операции" << endl;
+//		cout << "1. добавить элемент в список" << endl;
+//		cout << "2. удалить элемент списка" << endl;
+//		cout << "3. обменять значениями два элемента в списке" << endl;
+//		cout << "4. определение текущего числа элементов в списке" << endl;
+//		cout << "5. очистка списка " << endl;
+//		cout << "6. неразрушающее чтение элемента из списка" << endl;
 //		cin >> choice;
 //		switch (choice)
 //		{
@@ -240,20 +240,20 @@
 //			st11.show();
 //			break;
 //		case 2:
-//			cout << "Ââåäèòå èíäåêñû ýëåìåíòà äëÿ óäàëåíèÿ: ";
+//			cout << "Введите индексы элемента для удаления: ";
 //			cin >> i;
 //			st11.delete_element(i);
 //			st11.show();
 //			break;
 //		case 3:
 //			int l, r;
-//			cout << "Ââåäèòå èíäåêñû ýëåìåíòîâ äëÿ îáìåíà: ";
+//			cout << "Введите индексы элементов для обмена: ";
 //			cin >> l >> r;
 //			st11.swap(l, r);
 //			st11.show();
 //			break;
 //		case 4:
-//			cout << "Òåêóùåå ÷èñëî ýëåìåíòîâ â ñòåêå:" << st11.Get_number() << endl;
+//			cout << "Текущее число элементов в стеке:" << st11.Get_number() << endl;
 //			break;
 //		case 5:
 //			st11.clear();
@@ -261,7 +261,7 @@
 //			break;
 //		case 6:
 //			int j;
-//			cout << "Ââåäèòå èíäåêñ ñ÷èòûâàåìîãî ýëåìåíòà: "; cin >> j;
+//			cout << "Введите индекс считываемого элемента: "; cin >> j;
 //			cout << j << ".data = " << st11.Read(j) << endl;
 //			break;
 //		}
