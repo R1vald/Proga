@@ -1,0 +1,414 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Threading;
+using System.Diagnostics;
+
+using Excel = Microsoft.Office.Interop.Excel;
+
+
+namespace lab_4
+{
+    public partial class Form1 : Form
+    {
+
+        void sort_bubl_anim(int[] array, List<int> anim, ref int count)
+        {
+            int temp;
+
+            for (int i = 0; i < array.Length - 1; i++)
+            {
+
+                for (int j = i + 1; j < array.Length; j++)
+                    if (array[i] > array[j])
+                    {
+                        temp = array[i];
+                        array[i] = array[j];
+                        array[j] = temp;
+
+                    }
+                anim.AddRange(array);
+                count++;
+            }
+        }
+
+        async void animation(List<int> anim, int size, int count, double time)
+        {
+            button1.Enabled = false;
+
+            chart1.ChartAreas[0].Axes[0].Maximum = size;
+            chart1.ChartAreas[0].Axes[1].Maximum = size;
+            chart1.Series[0].Points.Clear();
+
+            for (int i = 0; i < count; i++) //разы
+            {
+                for (int j = i * size ; j < j + size && j < anim.Count; j++) //вывод соот. элементов
+                    chart1.Series[0].Points.Add(anim[j]);
+                await Task.Delay(TimeSpan.FromSeconds(time));
+                if (i < count - 2) chart1.Series[0].Points.Clear();
+            }
+
+            button1.Enabled = true;
+
+        }
+
+        void quick_sort_anim(ref int[] array, int left, int right, List<int> anim, ref int count)
+        {
+            
+            int pivot; 
+            int l_hold = left; 
+            int r_hold = right; 
+            pivot = array[left];
+            while (left < right) 
+            {
+                while ((array[right] >= pivot) && (left < right))
+                    right--; 
+                if (left != right) 
+                {
+                    array[left] = array[right]; 
+                    left++; 
+                }
+                while ((array[left] <= pivot) && (left < right))
+                    left++; 
+                if (left != right) 
+                {
+                    array[right] = array[left]; 
+                    right--; 
+                }
+            }
+            array[left] = pivot; 
+
+            anim.AddRange(array); count++;
+
+
+            pivot = left;
+            left = l_hold;
+            right = r_hold;
+            if (left < pivot) // Рекурсивно вызываем сортировку для левой и правой части массива
+                quick_sort_anim(ref array, left, pivot - 1, anim,ref count);
+            if (right > pivot)
+                quick_sort_anim(ref array, pivot + 1, right, anim, ref count);
+        }
+        
+        //сортировки
+        void sort_bubl(int[] array)
+        {
+            int temp;
+            for (int i = 0; i < array.Length - 1; i++)
+            {
+
+                for (int j = i + 1; j < array.Length; j++)
+                    if (array[i] > array[j])
+                    {
+                        temp = array[i];
+                        array[i] = array[j];
+                        array[j] = temp;
+
+                    }
+            }
+        }
+
+        void quick_sort(ref int[] array, int left, int right)
+        {
+            if (left == 0 && right == 0)
+                return;
+
+            int pivot; 
+            int l_hold = left; 
+            int r_hold = right; 
+            pivot = array[left];
+            while (left < right) 
+            {
+                while ((array[right] >= pivot) && (left < right))
+                    right--; 
+                if (left != right) 
+                {
+                    array[left] = array[right]; 
+                    left++; 
+                }
+                while ((array[left] <= pivot) && (left < right))
+                    left++; 
+                if (left != right) 
+                {
+                    array[right] = array[left]; 
+                    right--; 
+                }
+            }
+            array[left] = pivot; 
+
+            pivot = left;
+            left = l_hold;
+            right = r_hold;
+            if (left < pivot) 
+                quick_sort(ref array, left, pivot - 1);
+            if (right > pivot)
+                quick_sort(ref array, pivot + 1, right);
+
+
+        }
+
+        static void init_array(ref int[] array, int size)
+        {
+            Random rnd = new Random();
+            int number;
+            array = new int[size];
+            List<int> list_numbers = new List<int>();
+
+            for (int i = 0; i < size; i++)
+            {
+                while (true)
+                {
+                    number = rnd.Next(1, size + 1);
+                    if (list_numbers.IndexOf(number) == -1) { list_numbers.Add(number); break; }
+                }
+
+                array[i] = number;
+            }
+        }
+
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Stopwatch stopWatch;
+            
+            int[] array = null;
+            int size = Convert.ToInt32(numbers.Text);
+            double time = Convert.ToDouble(speed.Text);
+
+            init_array(ref array, size);
+            chart1.Series[0].Points.Clear();
+
+            
+            richTextBox1.Text = String.Empty;
+
+            List<int> anim = new List<int>(); int count = 1;
+
+            if (IsBubble.Checked)
+            {
+                stopWatch = Stopwatch.StartNew();
+                sort_bubl_anim(array, anim, ref count);
+                stopWatch.Stop();
+
+                animation(anim, size, count, time);
+                richTextBox1.Text = stopWatch.ElapsedTicks.ToString();
+                stopWatch.Reset();
+            }
+            else if(quicksort.Checked)
+            {
+                stopWatch = Stopwatch.StartNew();
+                quick_sort_anim(ref array, 0, array.Length - 1, anim,ref count);
+                stopWatch.Stop();
+                animation(anim, size, count, time);
+
+                richTextBox1.Text = stopWatch.Elapsed.Ticks.ToString();
+                stopWatch.Reset();
+
+            }
+   
+
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Stopwatch stopWatch = new Stopwatch();
+            int[] sizes = {100, 1000, 2000, 5000, 10000};
+            int[] array_origin = null;
+
+            List<long> time_bubl = new List<long>();
+            List<long> time_quick = new List<long>();
+            List<long> time_sys_quick = new List<long>();
+
+
+            
+
+            const int count = 10;
+
+            for (int i = 0; i < sizes.Length; i++)
+            {
+
+                array_origin = new int[sizes[i]];
+                init_array(ref array_origin, sizes[i]);
+
+                for (int j = 0; j < count; j++)
+                {
+                    int[] array_1 = new int[sizes[i]]; array_origin.CopyTo(array_1, 0);
+                    int[] array_2 = new int[sizes[i]]; array_origin.CopyTo(array_2, 0);
+                    int[] array_3 = new int[sizes[i]]; array_origin.CopyTo(array_3, 0);
+
+                    stopWatch.Start();
+                    sort_bubl(array_1);
+                    stopWatch.Stop();
+
+                    time_bubl.Add(stopWatch.Elapsed.Ticks); stopWatch.Reset();
+
+                    stopWatch.Start();
+                    quick_sort(ref array_2, 0, array_2.Length - 1);
+                    stopWatch.Stop();
+
+                    time_quick.Add(stopWatch.Elapsed.Ticks); stopWatch.Reset();
+
+
+                    stopWatch.Start();
+                    Array.Sort(array_3);
+                    stopWatch.Stop();
+                    time_sys_quick.Add(stopWatch.Elapsed.Ticks); stopWatch.Reset();
+
+                }
+
+                
+            }
+
+            //ExportFile(time_bubl, count, sizes.Length, ref sizes, "Пузырек");
+            //ExportFile(time_quick, count, sizes.Length, ref sizes, "Быстрая сортировка");
+            //ExportFile(time_sys_quick, count, sizes.Length, ref sizes, "Встроенная сортировка");
+
+
+            //string FileName = "C:\\lab_4\\lab_4\\bin\\Debug\\01.12.2021 23.00.44.xlsx";
+            //ExportFile(FileName, time_bubl, count, sizes.Length, ref sizes, "Пузырек");
+
+            string[] MyMethods = { "Пузырек", "Быстрая сортировка", "Встроенная сортировка" };
+            CreateFile(time_bubl, time_quick, time_sys_quick, count, sizes.Length, ref sizes, MyMethods);
+            MessageBox.Show("Готово");
+
+        }
+
+        string CreateFile(List<long> method1, List<long> method2, List<long> method3, int count, int sizes, ref int[] sizes_array, string[] methodsName)
+        {
+            
+
+            Excel.Application excel_app = new Excel.Application();
+
+            //отобразить excel 
+            excel_app.Visible = false;
+            //Количество листов в рабочей книге
+            excel_app.SheetsInNewWorkbook = 1;
+            //Добавить рабочую книгу
+            Excel.Workbook workBook = excel_app.Workbooks.Add(Type.Missing);
+            //Отключить отображение окон с сообщениями
+            excel_app.DisplayAlerts = false;
+            //Получаем первый лист документа (счет начинается с 1)
+            Excel.Worksheet sheet = (Excel.Worksheet)excel_app.Worksheets.get_Item(1);
+
+            long temp;
+            int column, row = 1, k;
+
+            for (column = 2, k = 0; column < sizes + 2; column++, k++)
+                sheet.Cells[row, column] = sizes_array[k];
+
+            for (row = 2, k = 0; row < 2 + 3; row++, k++)
+                sheet.Cells[row, 1] = methodsName[k];
+
+            row = 2; column = 2;
+            for (int i = 0; i < sizes; i++)
+            {
+                temp = 0;
+
+                for (int j = i * count; j < (i + 1) * count; j++)
+                    temp += method1[j] / count;
+               // method1[i] = temp;
+                sheet.Cells[row, column] = temp.ToString(); column++;
+                
+                //result += NameSort + "Размер: " + sizes_array[i] + " " + temp + "\n";
+
+            }
+
+            row = 3; column = 2;
+            for (int i = 0; i < sizes; i++)
+            {
+                temp = 0;
+
+                for (int j = i * count; j < (i + 1) * count; j++)
+                    temp += method2[j] / count;
+                // method1[i] = temp;
+                sheet.Cells[row, column] = temp.ToString(); column++;
+
+                //result += NameSort + "Размер: " + sizes_array[i] + " " + temp + "\n";
+
+            }
+
+            row = 4; column = 2;
+            for (int i = 0; i < sizes; i++)
+            {
+                temp = 0;
+
+                for (int j = i * count; j < (i + 1) * count; j++)
+                    temp += method3[j] / count;
+                // method1[i] = temp;
+                sheet.Cells[row, column] = temp.ToString(); column++;
+
+                //result += NameSort + "Размер: " + sizes_array[i] + " " + temp + "\n";
+
+            }
+
+
+            // Удалите сохраненный файл, если он уже существует.
+            string filename = Application.StartupPath + "\\" + DateTime.Now.ToString().Replace(":",".") + ".xlsx";
+            //System.IO.File.Delete(filename);
+
+            workBook.SaveAs(filename, Type.Missing, Type.Missing,
+            Type.Missing, Type.Missing, Type.Missing,
+            Excel.XlSaveAsAccessMode.xlExclusive, Type.Missing,
+            Type.Missing, Type.Missing, Type.Missing,
+            Type.Missing);
+
+            workBook.Close(true, Type.Missing, Type.Missing);
+
+            // Закройте сервер Excel.
+            excel_app.Quit();
+
+            return filename;
+
+        }
+
+        void ExportFile(string File, List<double> input, int count, int sizes, ref int[] sizes_array, string NameSort) 
+        {
+            double[] times = new double[sizes];
+            double temp;
+
+            string result = NameSort;
+
+            for (int i = 0; i < sizes; i++)
+            {
+                temp = 0.0;
+
+                for (int j = i; j < (i+1) * count/sizes; j++)
+                    temp += input[j] / count;
+                times[i] = temp;
+
+                result += NameSort + "Размер: " + sizes_array[i] + " "+ temp + "\n";
+
+            }
+
+            Excel.Application excel_app = new Excel.Application();
+
+            excel_app.Workbooks.Open(File,
+  Type.Missing, Type.Missing, Type.Missing, Type.Missing,
+  Type.Missing, Type.Missing, Type.Missing, Type.Missing,
+  Type.Missing, Type.Missing, Type.Missing, Type.Missing,
+  Type.Missing, Type.Missing);
+
+            Excel.Worksheet sheet = (Excel.Worksheet)excel_app.Worksheets.get_Item(1);
+            int n = sheet.Rows.Count;
+
+            richTextBox1.Text += n +"\n";
+
+
+
+            // Закройте сервер Excel.
+            excel_app.Quit();
+
+        }
+
+        
+    }
+}
